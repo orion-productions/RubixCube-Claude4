@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Rubik's Cube</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #ui-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 100;
+            min-width: 125px;
+            max-width: 180px;
+        }
+        
+        .control-group {
+            margin-bottom: 12px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        
+        input[type="range"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        input[type="range"] {
+            height: 30px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 4px 0;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background: rgba(255, 255, 255, 0.2);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .shuffle-btn {
+            background: linear-gradient(45deg, #4834d4, #686de0);
+        }
+        
+        .solve-btn {
+            background: linear-gradient(45deg, #00d2d3, #54a0ff);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #ff9ff3, #f368e0);
+        }
+        
+        #status {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .instruction-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #54a0ff;
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 1000;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #54a0ff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <div>Loading Rubik's Cube...</div>
+    </div>
+    
+    <div id="container">
+        <div id="ui-panel">
+            <div class="control-group">
+                <label for="cubeSize">Cube Size: <span id="cubeSizeValue">3</span>x<span id="cubeSizeValue2">3</span>x<span id="cubeSizeValue3">3</span></label>
+                <input type="range" id="cubeSize" min="2" max="20" value="3">
+                <input type="number" id="cubeSizeInput" min="2" max="20" value="3" placeholder="Enter size">
+            </div>
+            
+            <div class="control-group">
+                <button id="generateCube">Generate New Cube</button>
+                <button id="shuffleCube" class="shuffle-btn">Shuffle Cube</button>
+                <button id="solveCube" class="solve-btn">Solve Cube</button>
+                <button id="resetCube" class="reset-btn">Reset to Solved</button>
+            </div>
+            
+            <div class="control-group">
+                <label>Layer Rotations:</label>
+                <button id="rotateX">Rotate X Layer</button>
+                <button id="rotateY">Rotate Y Layer</button>
+                <button id="rotateZ">Rotate Z Layer</button>
+            </div>
+            
+            <div id="status">Ready</div>
+        </div>
+        
+        <div id="instructions">
+            <div class="instruction-title">Controls:</div>
+            • Left click + drag: Rotate view<br>
+            • Right click + drag: Pan view<br>
+            • Mouse wheel: Zoom in/out<br>
+            • Click cube faces to rotate layers<br>
+            • Use gamepad for enhanced control<br>
+            • Adjust cube size (2-20) and regenerate
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="rubiks-cube.js"></script>
+</body>
+</html>
