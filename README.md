@@ -1,1 +1,1 @@
-# RubixCube-Claud4
+# RubixCube-Claude4
