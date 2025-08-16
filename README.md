@@ -2,6 +2,9 @@
 
 A fully interactive 3D Rubik's Cube implementation using Three.js that supports dynamic sizing from 2x2x2 up to 20x20x20, complete with shuffling, solving animations, and multiple control methods.
 
+## 🎮 Play Online
+**Live Demo**: [https://orion-productions.github.io/RubixCube-Claude4/](https://orion-productions.github.io/RubixCube-Claude4/)
+
 ## Features
 
 ### Core Functionality
@@ -43,13 +46,13 @@ A fully interactive 3D Rubik's Cube implementation using Three.js that supports 
 4. **UI Controls**:
    - Size slider and input field for cube dimensions
    - Generate new cube button
-   - Shuffle button (100 random moves)
+   - Shuffle button (20 random moves)
    - Solve button (reverses move history)
    - Reset button (instant return to solved state)
    - Individual layer rotation buttons
 
 ### Advanced Features
-- **Shuffle Algorithm**: Performs 100 random rotations from solved state
+- **Shuffle Algorithm**: Performs 20 random rotations from solved state
 - **Solve Algorithm**: Reverses the exact sequence of moves used in shuffling
 - **Move History Tracking**: Records all moves for accurate solving
 - **Performance Optimization**: Efficient geometry reuse and smooth animations
@@ -79,7 +82,7 @@ A fully interactive 3D Rubik's Cube implementation using Three.js that supports 
 ## File Structure
 
 ```
-RubixCube-like/
+RubixCube-Claude4/
 ├── index.html          # Main HTML structure and UI
 ├── rubiks-cube.js      # Complete Three.js implementation
 └── README.md           # This documentation
@@ -87,22 +90,21 @@ RubixCube-like/
 
 ## Getting Started
 
-1. **Clone or download** the project files
-2. **Start a local server**:
+1. **Play Online**: Visit [https://orion-productions.github.io/RubixCube-Claude4/](https://orion-productions.github.io/RubixCube-Claude4/)
+
+2. **Run Locally**:
    ```bash
+   git clone https://github.com/orion-productions/RubixCube-Claude4.git
+   cd RubixCube-Claude4
    python -m http.server 8000
-   # or
-   npx serve .
-   # or any other local server
+   # Open http://localhost:8000 in your browser
    ```
-3. **Open your browser** to `http://localhost:8000`
-4. **Start playing** with the cube!
 
 ## Usage Guide
 
 ### Basic Operations
 1. **Change Cube Size**: Use the slider or input field (2-20), then click "Generate New Cube"
-2. **Shuffle**: Click "Shuffle Cube" to randomize with 100 moves
+2. **Shuffle**: Click "Shuffle Cube" to randomize with 20 moves
 3. **Solve**: Click "Solve Cube" to watch it solve step-by-step
 4. **Reset**: Click "Reset to Solved" for instant solved state
 5. **Rotate View**: Click and drag to explore different angles
@@ -161,13 +163,13 @@ this.colors = {
 ### Animation Speed
 Adjust the `duration` variable in the `animateRotation` method:
 ```javascript
-const duration = 300; // milliseconds (default)
+const duration = 600; // milliseconds (current: 2x slower)
 ```
 
 ### Shuffle Complexity
 Change the number of shuffle moves:
 ```javascript
-await this.shuffle(100); // Default: 100 moves
+await this.shuffle(20); // Default: 20 moves
 ```
 
 ## Future Enhancements
